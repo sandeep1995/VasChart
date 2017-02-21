@@ -45,7 +45,7 @@ VasChart.prototype._setAxis = function () {
     // Setting the length of the both Axis
     this._xPadding = Math.round(this._width * 0.1);
     this._yPadding = Math.round(this._height * 0.1);
-    
+
     this._xAxis.length = Math.round(this._width - this._xPadding);
     this._yAxis.length = Math.round(this._height - this._yPadding);
 
@@ -87,7 +87,7 @@ VasChart.prototype._drawAxis = function () {
 };
 
 VasChart.prototype._map = function (x, in_min, in_max, out_min, out_max) {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 };
 
 VasChart.prototype._getMax = function (arr) {
@@ -101,23 +101,33 @@ VasChart.prototype._getMin = function (arr) {
 
 VasChart.prototype._buildLineChartData = function () {
 
-    
+
     var xStep = this._xAxis.length / this._labelsCount;
 
     var initialXPoint = this._xPadding;
     var maxY = this._getMax(this._data.dataset);
     var minY = this._getMin(this._data.dataset);
-    
+
 
     for (var i = 0; i < this._labelsCount; i++) {
+
         this._lineChartData.push({
             x: initialXPoint,
             y: this._map(this._data.dataset[i], minY, maxY, this._yPadding, this._height)
         });
+        // Write the labels
+        this._writeLine(this._data.labels[i], initialXPoint, this._yPadding/2);
         initialXPoint += xStep;
     }
 
 };
+
+VasChart.prototype._writeLine = function (text, x, y) {
+    // TODO:: write the text correctly
+    this._ctx.fillText(text, x, y);
+}
+
+
 
 VasChart.prototype.draw = function () {
     this._setContextOriginLowerLeft();
@@ -126,7 +136,8 @@ VasChart.prototype.draw = function () {
     this._buildLineChartData();
 
     for (var i = 0; i < this._labelsCount - 1; i++) {
-        this._drawLine(this._lineChartData[i], this._lineChartData[i+1]);
+        this._drawLine(this._lineChartData[i], this._lineChartData[i + 1]);
+
     }
 
     console.log("Draw");
